@@ -1,2 +1,3 @@
-# Pok-dex-TypeScript-Lite
+# Pokedéx TypeScript Lite
+
 Projeto SC TEC
