@@ -36,3 +36,17 @@ export interface PokemonApiResponse {
         };
     }[];
 }
+
+export class PokemonModel implements Pokemon {
+    constructor(
+        public id: number,
+        public nome: string,
+        public tipos: string[],
+        public altura: number,
+        public peso: number,
+        public hp: number,
+        public ataque: number,
+        public defesa: number,
+    ) { }
+
+}
