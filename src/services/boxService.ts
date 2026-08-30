@@ -4,10 +4,9 @@ import { PokemonResumo } from "../models/pokemon.js";
 export class BoxServices {
     private caminhoArquivo: string = './pc_box.json';
 
-    async adicionar(pokemon: PokemonResumo | null): Promise<void> {
+    async adicionar(pokemon: PokemonResumo | null): Promise<PokemonResumo> {
         if (pokemon === null) {
-            console.log("[ERRO] - Pokemon Nulo");
-            return
+            throw new Error("[ERRO] - Pokemon Nulo");
         }
         const pokemons: PokemonResumo[] = await this.buscarTodos();
 
@@ -16,19 +15,22 @@ export class BoxServices {
         });
 
         if (duplicado) {
-            console.log("[ERRO] - Pokemon já existente");
-            return;
+            throw new Error("[ERRO] - Pokemon já existente");
         }
 
         pokemons.push(pokemon);
-
-        await writeFile(
-            this.caminhoArquivo,
-            JSON.stringify(pokemons, null, 2),
-            "utf-8"
-        );
+        try {
+            await writeFile(
+                this.caminhoArquivo,
+                JSON.stringify(pokemons, null, 2),
+                "utf-8"
+            );
+        } catch (erro) {
+            console.log(erro);
+        }
 
         console.log("[OK] - Pokemon adicionado");
+        return pokemon;
     }
     async buscarTodos(): Promise<PokemonResumo[]> {
 
@@ -40,42 +42,42 @@ export class BoxServices {
         return JSON.parse(dados);
     }
 
-    async buscarPorId(id: number | null): Promise<PokemonResumo | undefined> {
-        if (id === null) {
-            console.log("[ERRO] - ID Nulo");
-            return
+    async buscarPorIdOuNome(idOuNome: number | string | null): Promise<PokemonResumo | undefined> {
+        if (idOuNome === null) {
+            throw new Error("[ERRO] - Valor id e nome  Nulo");
         }
+        const propriedade: keyof PokemonResumo = typeof idOuNome != 'number' ? 'nome' : 'id';
+
         const pokemons: PokemonResumo[] = await this.buscarTodos();
 
         return pokemons.find((pokemon) => {
-           return pokemon.id === id
+            return pokemon[propriedade] === idOuNome;
         });
     }
-    async remover(id: number | null): Promise<void> {
-        if (id === null) {
-            console.log("[ERRO] - ID Nulo");
-            return
+    async remover(idOuNome: number | string | null): Promise<void> {
+
+        if (idOuNome === null) {
+            throw new Error("[ERRO] - Valor nulo");
         }
 
-        let pokemons: PokemonResumo[] = await this.buscarTodos();
+        const pokemon = await this.buscarPorIdOuNome(idOuNome);
 
-        const existe = pokemons.some(pokemon => {
-            return pokemon.id !== id;
-        })
-
-        if (!existe) {
-            console.log('[AVISO] - Pokemon não encontrado')
-            return;
+        if (!pokemon) {
+            throw new Error("[AVISO] - Pokemon não encontrado");
         }
 
-        pokemons = pokemons.filter(pokemon => {
-            return pokemon.id !== id;
+        let pokemons = await this.buscarTodos();
+
+        pokemons = pokemons.filter(item => {
+            return item.id !== pokemon.id;
         });
+
         await writeFile(
             this.caminhoArquivo,
             JSON.stringify(pokemons, null, 2),
             "utf-8"
         );
-        console.log('[OK] - Pokemon removido');
+
+        console.log("[OK] - Pokemon removido");
     }
 } 
