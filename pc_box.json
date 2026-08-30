@@ -1,15 +1,5 @@
 [
   {
-    "id": 6,
-    "nome": "charizard",
-    "tipos": [
-      "fire",
-      "flying"
-    ],
-    "altura": 17,
-    "peso": 905
-  },
-  {
     "id": 4,
     "nome": "charmander",
     "tipos": [
@@ -28,6 +18,16 @@
     "peso": 190
   },
   {
+    "id": 6,
+    "nome": "charizard",
+    "tipos": [
+      "fire",
+      "flying"
+    ],
+    "altura": 17,
+    "peso": 905
+  },
+  {
     "id": 25,
     "nome": "pikachu",
     "tipos": [
@@ -35,5 +35,14 @@
     ],
     "altura": 4,
     "peso": 60
+  },
+  {
+    "id": 7,
+    "nome": "squirtle",
+    "tipos": [
+      "water"
+    ],
+    "altura": 5,
+    "peso": 90
   }
 ]

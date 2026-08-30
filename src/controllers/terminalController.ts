@@ -52,7 +52,9 @@ export class TerminalController {
                             console.log(res);
                         }
                     } catch (erro) {
-                        console.log(erro);
+                        if (erro instanceof Error) {
+                            console.log(erro.message);
+                        }
                     }
                     break;
 
@@ -61,7 +63,9 @@ export class TerminalController {
                         res = await this.adicionar(rl);
                         console.log(res);
                     } catch (erro) {
-                        console.log(erro);
+                        if (erro instanceof Error) {
+                            console.log(erro.message);
+                        }
                     }
                     break;
 
@@ -70,16 +74,24 @@ export class TerminalController {
                     try {
                         await this.remover(rl);
                     } catch (erro) {
-                        console.log(erro);
+                        if (erro instanceof Error) {
+                            console.log(erro.message);
+                        }
                     }
                     break;
 
                 case "4":
                     try {
                         res = await this.listar();
-                        console.table(res);
+                        if (res.length === 0) {
+                            console.log("[AVISO] - Catálogo vazio");
+                        } else {
+                            console.table(res);
+                        }
                     } catch (erro) {
-                        console.log(erro);
+                        if (erro instanceof Error) {
+                            console.log(erro.message);
+                        }
                     }
                     break;
 
@@ -109,16 +121,18 @@ export class TerminalController {
         return this.boxService.adicionar(pokemon);
     }
     private async listar() {
-        return this.boxService.buscarTodos();
+
+        return await this.boxService.buscarTodos();
+
     }
     private async remover(rl: Interface) {
 
-        const entrada = await rl.question("\n Digite o pokemon que deseja remover:");
+        const entrada = await rl.question("\n Digite o nome ou o id pokemon que deseja remover:");
 
         const idOuNome =
             /^\d+$/.test(entrada)
-                ? Number(entrada)
-                : entrada;
+                ? Number(entrada) // tranforma em numero
+                : entrada;//string
 
         return await this.boxService.remover(idOuNome);
     }
