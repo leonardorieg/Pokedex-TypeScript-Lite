@@ -15,19 +15,15 @@ export class BoxServices {
         });
 
         if (duplicado) {
-            throw new Error("[ERRO] - Pokemon já existente");
+            throw new Error("[ERRO] - Pokemon já existeno catálogo");
         }
 
         pokemons.push(pokemon);
-        try {
-            await writeFile(
-                this.caminhoArquivo,
-                JSON.stringify(pokemons, null, 2),
-                "utf-8"
-            );
-        } catch (erro) {
-            console.log(erro);
-        }
+        await writeFile(
+            this.caminhoArquivo,
+            JSON.stringify(pokemons, null, 2),
+            "utf-8"
+        );
 
         console.log("[OK] - Pokemon adicionado");
         return pokemon;
@@ -38,7 +34,7 @@ export class BoxServices {
             this.caminhoArquivo,
             "utf-8"
         );
-
+        
         return JSON.parse(dados);
     }
 
@@ -47,6 +43,10 @@ export class BoxServices {
             throw new Error("[ERRO] - Valor id e nome  Nulo");
         }
         const propriedade: keyof PokemonResumo = typeof idOuNome != 'number' ? 'nome' : 'id';
+        
+        if(typeof idOuNome === 'string'){
+            idOuNome = idOuNome.trim().toLowerCase();
+        }
 
         const pokemons: PokemonResumo[] = await this.buscarTodos();
 
@@ -54,6 +54,8 @@ export class BoxServices {
             return pokemon[propriedade] === idOuNome;
         });
     }
+
+
     async remover(idOuNome: number | string | null): Promise<void> {
 
         if (idOuNome === null) {
