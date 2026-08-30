@@ -1,14 +1,3 @@
-export interface Pokemon {
-    id: number;
-    nome: string;
-    tipos: string[];
-    altura: number;
-    peso: number;
-    hp: number;
-    ataque: number;
-    defesa: number;
-}
-
 export interface PokemonResumo {
     id: number;
     nome: string;
@@ -35,18 +24,4 @@ export interface PokemonApiResponse {
             name: string;
         };
     }[];
-}
-
-export class PokemonModel implements Pokemon {
-    constructor(
-        public id: number,
-        public nome: string,
-        public tipos: string[],
-        public altura: number,
-        public peso: number,
-        public hp: number,
-        public ataque: number,
-        public defesa: number,
-    ) { }
-
 }
