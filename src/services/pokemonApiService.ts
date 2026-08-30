@@ -2,7 +2,7 @@ import { PokemonApiResponse, PokemonResumo } from "../models/pokemon.js";
 
 export class PokemonApiService {
 
-    static async buscaPokemon(idOuNome: string): Promise<PokemonResumo | null> {
+    async buscaPokemon(idOuNome: string): Promise<PokemonResumo | null> {
 
         try {
             const url: string = 'https://pokeapi.co/api/v2/pokemon/';
